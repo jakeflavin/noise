@@ -1,0 +1,661 @@
+/* Hush is one screen: a dial, the activity it is judged against, and a microphone
+   button. Everything is sized from the viewport rather than scrolled, because the app
+   spends its life on a board at the front of a room.
+
+   The look is a classroom one — warm paper, white cards, thick rounded type and flat
+   traffic-light colour — rather than the dark instrument panel a meter invites. It has
+   to sit comfortably next to the other things on a teacher's screen. */
+
+:root {
+  /* Sliders, checkboxes and scrollbars are drawn by the browser, and follow the OS
+     rather than the page unless the page says which it is. */
+  color-scheme: light;
+
+  --paper: #fbf7f0;
+  --card: #ffffff;
+  --ink: #2e3245;
+  --muted: #7c8199;
+  --line: #ebe4d9;
+  --shadow: 0 2px 0 #e6ded1, 0 10px 24px -14px #6c604b7a;
+  /* The current zone's colour, set by the app on every reading. */
+  --zone: #2fbf71;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  /* Installed on a phone or projected from a tablet, the app runs under the status bar
+     and the home indicator, so each edge takes whichever is larger. */
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  transition: background 300ms ease;
+}
+
+/* The alert washes the paper rather than only the dial, so a room that is not looking
+   at the board still notices the screen change colour. */
+.app[data-alerting] {
+  background: color-mix(in srgb, var(--zone) 10%, var(--paper));
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-title {
+  margin: 0;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* The wordmark carries the app's one flourish: a dot that holds the room's colour. */
+.app-title::after {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-left: 3px;
+  vertical-align: 0.1em;
+  background: var(--zone);
+  border-radius: 999px;
+  transition: background 300ms ease;
+}
+
+.app-tools {
+  display: flex;
+  gap: 8px;
+}
+
+.app-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* The dial sits on a card, which is what makes the app read as a classroom tool rather
+   than a dashboard: one white sheet with the reading on it. */
+.gauge-card {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: center;
+  /* The card takes its width from whichever runs out first, the screen's width or its
+     height, and the dial's own proportions give it its height from there. Sizing it by
+     height alone left the card letterboxed around the dial on a phone. */
+  width: 100%;
+  max-width: min(100%, 72vh);
+  padding: 18px 26px;
+  background: var(--card);
+  border-radius: 32px;
+  box-shadow: var(--shadow);
+}
+
+.gauge {
+  width: 100%;
+  height: auto;
+}
+
+.gauge-fill {
+  /* The fill is redrawn every frame from the reading itself, so it must not also be
+     animated by CSS — the two would fight and the dial would lag the room. Only the
+     colour is given a transition, because a zone change is a step, not a sweep. */
+  transition: stroke 300ms ease;
+}
+
+.gauge-reading {
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 116px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  fill: var(--ink);
+}
+
+.gauge-zone {
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+/* The alert beats the dial rather than fading it: a fill that dims halfway through
+   every cycle reads as a rendering fault, not as a warning. */
+.gauge[data-alerting] {
+  animation: alert-beat 900ms ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes alert-beat {
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.app-message {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.app[data-alerting] .app-message {
+  color: var(--zone);
+  font-weight: 800;
+}
+
+/* The footer is only as wide as the activity track, and its children stretch to that
+   width — which is what puts the microphone button on exactly the track's width. */
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* The activities, as one segmented control: a single rounded track with the chosen tab
+   filled in. A row of separate buttons read as five things to decide between; a track
+   reads as one switch that is already set. */
+.presets {
+  display: flex;
+  gap: 4px;
+  max-width: 100%;
+  padding: 5px;
+  overflow-x: auto;
+  background: var(--card);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  scrollbar-width: none;
+}
+
+.presets::-webkit-scrollbar {
+  display: none;
+}
+
+.preset {
+  flex: 0 0 auto;
+  padding: 11px 22px;
+  color: var(--muted);
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.preset:hover {
+  color: var(--ink);
+  background: #f4efe6;
+}
+
+.preset[aria-checked='true'] {
+  color: #fff;
+  background: var(--chip);
+}
+
+.listen-button {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 62px;
+  padding: 0 34px;
+  color: #fff;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 21px;
+  font-weight: 500;
+  background: var(--zone);
+  border: none;
+  /* The solid ledge under the button is what makes it feel like something to press. */
+  border-radius: 999px;
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--zone) 72%, #000);
+  cursor: pointer;
+  transition:
+    background 300ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+/* Pressing squashes the ledge rather than moving the button away from the finger. */
+.listen-button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--zone) 72%, #000);
+}
+
+.listen-button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  color: var(--muted);
+  background: var(--card);
+  border: none;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.icon-button:hover {
+  color: var(--ink);
+}
+
+.icon-button:active {
+  transform: translateY(2px);
+}
+
+.icon-button.is-quiet {
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.icon-button.is-quiet:hover {
+  background: #f4efe6;
+}
+
+/* Projector mode: the dial takes the room, and the chrome that a teacher only needs
+   between activities gets out of its way until the pointer comes back. */
+.app[data-projector] .app-header,
+.app[data-projector] .app-footer,
+.app[data-projector] .app-message {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.app[data-projector]:hover .app-header,
+.app[data-projector]:hover .app-footer,
+.app[data-projector]:hover .app-message,
+.app[data-projector]:focus-within .app-header,
+.app[data-projector]:focus-within .app-footer {
+  opacity: 1;
+}
+
+/* Nothing hovers on a touch screen, so there the chrome stays put and projector mode
+   is only the larger dial. */
+@media (hover: none) {
+  .app[data-projector] .app-header,
+  .app[data-projector] .app-footer,
+  .app[data-projector] .app-message {
+    opacity: 1;
+  }
+}
+
+.app[data-projector] .gauge-card {
+  max-width: min(100%, 96vh);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge[data-alerting] {
+    animation: none;
+  }
+}
+
+/* A sheet pinned to the right, inset to match the app's own padding. */
+.drawer {
+  position: fixed;
+  inset: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom)) auto;
+  margin: 0;
+  width: min(430px, calc(100vw - 24px));
+  /* The UA stylesheet's height: fit-content would ignore the bottom inset. */
+  height: auto;
+  max-width: none;
+  max-height: none;
+  /* No padding at the top: the sticky head supplies its own, so that when the sheet
+     scrolls there is no strip of padding above it for content to show through. */
+  padding: 0 24px 22px;
+  overflow-y: auto;
+  color: var(--ink);
+  background: var(--card);
+  border: none;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px -20px #4a412f66;
+}
+
+.drawer::backdrop {
+  background: #2e324533;
+}
+
+.drawer-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Full-bleed to the sheet's edges, so content scrolling under it is covered. */
+  margin: 0 -24px 4px;
+  padding: 20px 20px 14px 24px;
+  background: var(--card);
+  border-bottom: 2px solid var(--line);
+  border-radius: 28px 28px 0 0;
+}
+
+.drawer-head h2 {
+  margin: 0;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 2px solid var(--line);
+}
+
+.settings-section:first-of-type {
+  padding-top: 12px;
+  border-top: none;
+}
+
+.settings-section h3 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setting-label {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* The value as a pill in the row's own colour: legible at a glance while dragging,
+   and it keeps its width as the number changes. */
+.setting-value {
+  flex: 0 0 auto;
+  min-width: 4ch;
+  padding: 3px 11px;
+  color: var(--accent, var(--zone));
+  font-size: 14px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  background: color-mix(in srgb, var(--accent, var(--zone)) 14%, transparent);
+  border-radius: 999px;
+}
+
+.setting-hint {
+  margin: -2px 0 2px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.setting-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* The track is drawn as a background cut at the value, and the handle sits on top of
+   it — see components/Slider.tsx for why the browser's own colours are not used. */
+.slider {
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  background: linear-gradient(
+      to right,
+      var(--accent, var(--zone)) var(--fill),
+      #efe7d9 var(--fill)
+    )
+    center / 100% 10px no-repeat;
+  border-radius: 999px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  background: var(--accent, var(--zone));
+  border: 4px solid var(--card);
+  border-radius: 999px;
+  box-shadow: 0 1px 4px #6c604b59;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent, var(--zone));
+  border: 4px solid var(--card);
+  border-radius: 999px;
+  box-shadow: 0 1px 4px #6c604b59;
+}
+
+/* The zone a threshold belongs to, named by its colour now that the faces are gone. */
+.swatch {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 9px;
+  border-radius: 999px;
+}
+
+/* A built-in activity shows its limits but does not hand them over to be dragged. */
+.slider:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+/* A switch: the checkbox itself is only there to be operated and announced. */
+.toggle {
+  flex: 0 0 auto;
+  display: inline-grid;
+  cursor: pointer;
+}
+
+.toggle input {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.toggle-track {
+  grid-area: 1 / 1;
+  width: 54px;
+  height: 32px;
+  padding: 4px;
+  background: #e7dfd1;
+  border-radius: 999px;
+  transition: background 200ms ease;
+}
+
+.toggle-track::after {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: var(--card);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px #6c604b59;
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1.2);
+}
+
+.toggle input:checked + .toggle-track {
+  background: var(--zone);
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(22px);
+}
+
+.toggle input:focus-visible + .toggle-track {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.outline-button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  color: var(--ink);
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  background: #f4efe6;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.outline-button.is-small {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 15px;
+}
+
+.outline-button:hover:not(:disabled) {
+  background: #f0e9dd;
+}
+
+.outline-button:disabled {
+  color: var(--muted);
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* A note the section ends on, set off from the controls above it. */
+.settings-note {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  background: #f7f2ea;
+  border-radius: 14px;
+}
+
+.settings-note .swatch {
+  align-self: center;
+}
+
+.shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  list-style: none;
+}
+
+.shortcuts li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.keys {
+  display: flex;
+  gap: 4px;
+}
+
+kbd {
+  padding: 3px 8px;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  background: #f4efe6;
+  border-radius: 8px;
+}
+
+/* Below the breakpoint the activity tabs tighten up, which keeps the dial on screen. */
+@media (max-height: 760px), (max-width: 620px) {
+  .preset {
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+
+  .gauge-card {
+    padding: 12px 16px;
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#fbf7f0"/>
+  <!-- The dial: 270° opening at the bottom, banded into the four zones and cut by the
+       same white slots as src/components/Gauge.tsx, with its two ends rounded. -->
+  <g fill="none" stroke-width="8">
+    <path d="M 17.8 46.2 A 20 20 0 0 1 17.8 17.8" stroke="#2fbf71" stroke-linecap="round"/>
+    <path d="M 19.4 16.3 A 20 20 0 0 1 32 12" stroke="#ffc02e"/>
+    <path d="M 33.6 12.1 A 20 20 0 0 1 44.6 16.3" stroke="#ff8a2b"/>
+    <path d="M 46.2 17.8 A 20 20 0 0 1 46.2 46.2" stroke="#ef4136" stroke-linecap="round"/>
+  </g>
+</svg>
