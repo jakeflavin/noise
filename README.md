@@ -28,3 +28,7 @@ npm run dev
 
 `npm test` runs the unit tests, `npm run lint` and `npm run typecheck` the checks CI
 runs, and `npm run icons` regenerates the PNG app icons after a change to the mark.
+
+## Standards
+
+Code in this repo follows the [shared standards](https://github.com/jakeflavin/portfolio/blob/main/docs/STANDARDS.md) and [layout](https://github.com/jakeflavin/portfolio/blob/main/docs/LAYOUT.md) used across the directory.
