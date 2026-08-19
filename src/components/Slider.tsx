@@ -1,3 +1,5 @@
+import { Range } from './Slider.styled'
+
 type SliderProps = {
   value: number
   min: number
@@ -31,8 +33,7 @@ export function Slider({
   const filled = ((value - min) / (max - min)) * 100
 
   return (
-    <input
-      className="slider"
+    <Range
       type="range"
       min={min}
       max={max}

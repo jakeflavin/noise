@@ -1,3 +1,5 @@
+import { Track, Wrapper } from './Toggle.styled'
+
 type ToggleProps = {
   checked: boolean
   label: string
@@ -10,14 +12,14 @@ type ToggleProps = {
  */
 export function Toggle({ checked, label, onChange }: ToggleProps) {
   return (
-    <label className="toggle">
+    <Wrapper>
       <input
         type="checkbox"
         checked={checked}
         aria-label={label}
         onChange={(e) => onChange(e.target.checked)}
       />
-      <span className="toggle-track" aria-hidden="true" />
-    </label>
+      <Track aria-hidden="true" />
+    </Wrapper>
   )
 }
