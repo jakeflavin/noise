@@ -441,56 +441,6 @@ body {
   text-transform: uppercase;
 }
 
-.setting {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.setting-head {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.setting-label {
-  display: flex;
-  align-items: center;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-/* The value as a pill in the row's own colour: legible at a glance while dragging,
-   and it keeps its width as the number changes. */
-.setting-value {
-  flex: 0 0 auto;
-  min-width: 4ch;
-  padding: 3px 11px;
-  color: var(--accent, var(--zone));
-  font-size: 14px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-  background: color-mix(in srgb, var(--accent, var(--zone)) 14%, transparent);
-  border-radius: 999px;
-}
-
-.setting-hint {
-  margin: -2px 0 2px;
-  color: var(--dim);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.setting-controls {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-
 /* The track is drawn as a background cut at the value, and the handle sits on top of
    it — see components/Slider.tsx for why the browser's own colours are not used. */
 /* The zone a threshold belongs to, named by its colour now that the faces are gone. */

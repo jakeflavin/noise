@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Head, Hint, Label, Row, Value } from './Setting.styled'
 
 type SettingProps = {
   label: ReactNode
@@ -21,20 +22,17 @@ type SettingProps = {
  */
 export function Setting({ label, hint, value, accent, children }: SettingProps) {
   return (
-    <div className="setting">
-      <div className="setting-head">
-        <span className="setting-label">{label}</span>
+    <Row>
+      <Head>
+        <Label>{label}</Label>
         {value !== undefined && (
-          <span
-            className="setting-value"
-            style={accent ? ({ '--accent': accent } as React.CSSProperties) : undefined}
-          >
+          <Value style={accent ? ({ '--accent': accent } as React.CSSProperties) : undefined}>
             {value}
-          </span>
+          </Value>
         )}
-      </div>
-      {hint && <p className="setting-hint">{hint}</p>}
+      </Head>
+      {hint && <Hint>{hint}</Hint>}
       {children}
-    </div>
+    </Row>
   )
 }

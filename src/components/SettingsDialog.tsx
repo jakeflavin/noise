@@ -6,6 +6,7 @@ import { shortcuts } from '@/lib/shortcuts'
 import { useDialog } from '@/hooks/useDialog'
 import type { Settings } from '@/hooks/useSettings'
 import { Setting } from './Setting'
+import { Controls } from './Setting.styled'
 import { Slider } from './Slider'
 import { ThresholdEditor } from './ThresholdEditor'
 import { Toggle } from './Toggle'
@@ -133,7 +134,7 @@ export function SettingsDialog({
           />
         </Setting>
         <Setting label="Chime" hint="The alert always shows on screen; this gives it a sound too.">
-          <div className="setting-controls">
+          <Controls>
             <button className="outline-button is-small" onClick={() => playChime()}>
               <Play size={15} />
               Hear it
@@ -143,7 +144,7 @@ export function SettingsDialog({
               label="Play a chime with the alert"
               onChange={(checked) => set('sound', checked)}
             />
-          </div>
+          </Controls>
         </Setting>
       </section>
 
