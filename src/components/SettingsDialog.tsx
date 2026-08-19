@@ -7,6 +7,8 @@ import { useDialog } from '@/hooks/useDialog'
 import type { Settings } from '@/hooks/useSettings'
 import { Setting } from './Setting'
 import { Controls } from './Setting.styled'
+import { OutlineButton } from './buttons.styled'
+import { IconButton } from './buttons.styled'
 import { Slider } from './Slider'
 import { ThresholdEditor } from './ThresholdEditor'
 import { Toggle } from './Toggle'
@@ -48,9 +50,9 @@ export function SettingsDialog({
       {/* The head stays put while the drawer scrolls, so the way out is always to hand. */}
       <header className="drawer-head">
         <h2>Settings</h2>
-        <button className="icon-button is-quiet" onClick={onClose} aria-label="Close settings">
+        <IconButton $quiet onClick={onClose} aria-label="Close settings">
           <X size={20} />
-        </button>
+        </IconButton>
       </header>
 
       <section className="settings-section">
@@ -61,15 +63,14 @@ export function SettingsDialog({
           onChange={(custom) => onChange({ ...settings, custom })}
         />
         {preset.id !== customPresetId && (
-          <button
-            className="outline-button"
+          <OutlineButton
             onClick={() =>
               onChange({ ...settings, presetId: customPresetId, custom: preset.thresholds })
             }
           >
             <SlidersHorizontal size={17} />
             Copy into Custom to edit
-          </button>
+          </OutlineButton>
         )}
       </section>
 
@@ -88,13 +89,12 @@ export function SettingsDialog({
             onChange={(value) => set('sensitivity', value)}
           />
         </Setting>
-        <button
-          className="outline-button"
+        <OutlineButton
           disabled={!listening}
           onClick={() => set('sensitivity', sensitivityFor(rawDbRef.current, CALIBRATION_TARGET))}
         >
           {listening ? 'Calibrate to the room right now' : 'Start listening to calibrate'}
-        </button>
+        </OutlineButton>
         <p className="settings-note">
           {listening
             ? `The room is reading ${Math.round(levelFromDb(rawDbRef.current, settings.sensitivity))}.
@@ -135,10 +135,10 @@ export function SettingsDialog({
         </Setting>
         <Setting label="Chime" hint="The alert always shows on screen; this gives it a sound too.">
           <Controls>
-            <button className="outline-button is-small" onClick={() => playChime()}>
+            <OutlineButton $small onClick={() => playChime()}>
               <Play size={15} />
               Hear it
-            </button>
+            </OutlineButton>
             <Toggle
               checked={settings.sound}
               label="Play a chime with the alert"

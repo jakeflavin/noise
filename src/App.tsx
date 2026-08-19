@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Maximize2, Mic, MicOff, Minimize2, Settings as SettingsIcon } from 'lucide-react'
 import { Gauge } from './components/Gauge'
 import { Card as GaugeCard } from './components/Gauge.styled'
+import { IconButton, ListenButton } from './components/buttons.styled'
 import { PresetPicker } from './components/PresetPicker'
 import { SettingsDialog } from './components/SettingsDialog'
 import { builtInPresets, resolvePreset, zoneFor, zones } from './lib/presets'
@@ -79,20 +80,18 @@ export default function App() {
       <header className="app-header">
         <h1 className="app-title">Hush</h1>
         <div className="app-tools">
-          <button
-            className="icon-button"
+          <IconButton
             onClick={projector.toggle}
             aria-label={projector.on ? 'Leave projector mode' : 'Projector mode'}
           >
             {projector.on ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
-          <button
-            className="icon-button"
+          </IconButton>
+          <IconButton
             onClick={() => setSettingsOpen(true)}
             aria-label="Open settings"
           >
             <SettingsIcon size={18} />
-          </button>
+          </IconButton>
         </div>
       </header>
 
@@ -121,10 +120,10 @@ export default function App() {
           presetId={settings.presetId}
           onChange={(presetId) => setSettings((current) => ({ ...current, presetId }))}
         />
-        <button className="listen-button" onClick={toggle} disabled={status === 'starting'}>
+        <ListenButton onClick={toggle} disabled={status === 'starting'}>
           {listening ? <MicOff size={20} /> : <Mic size={20} />}
           {listening ? 'Stop' : status === 'starting' ? 'Starting…' : 'Start listening'}
-        </button>
+        </ListenButton>
       </footer>
 
       <SettingsDialog

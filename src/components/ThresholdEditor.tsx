@@ -1,4 +1,5 @@
 import { sanitizeThresholds, zones, type Thresholds } from '@/lib/presets'
+import { Swatch } from './buttons.styled'
 import { Setting } from './Setting'
 import { Slider } from './Slider'
 
@@ -30,7 +31,7 @@ export function ThresholdEditor({ thresholds, editable, onChange }: ThresholdEdi
           value={thresholds[row.key]}
           label={
             <>
-              <span className="swatch" style={{ background: row.zone.color }} aria-hidden="true" />
+              <Swatch style={{ background: row.zone.color }} aria-hidden="true" />
               {row.label}
             </>
           }
@@ -47,7 +48,7 @@ export function ThresholdEditor({ thresholds, editable, onChange }: ThresholdEdi
         </Setting>
       ))}
       <p className="settings-note" style={{ '--accent': zones.over.color } as React.CSSProperties}>
-        <span className="swatch" style={{ background: zones.over.color }} aria-hidden="true" />
+        <Swatch style={{ background: zones.over.color }} aria-hidden="true" />
         Anything above {thresholds.loud} is over the limit, and starts the alert’s clock.
       </p>
     </>

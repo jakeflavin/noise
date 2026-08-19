@@ -166,76 +166,6 @@ body {
 /* The activities, as one segmented control: a single rounded track with the chosen tab
    filled in. A row of separate buttons read as five things to decide between; a track
    reads as one switch that is already set. */
-.listen-button {
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 62px;
-  padding: 0 34px;
-  color: #fff;
-  font-family: 'Fredoka', 'Nunito', sans-serif;
-  font-size: 21px;
-  font-weight: 500;
-  background: var(--zone);
-  border: none;
-  /* The solid ledge under the button is what makes it feel like something to press. */
-  border-radius: 999px;
-  box-shadow: 0 5px 0 color-mix(in srgb, var(--zone) 72%, #000);
-  cursor: pointer;
-  transition:
-    background 300ms ease,
-    box-shadow 120ms ease,
-    transform 120ms ease;
-}
-
-/* Pressing squashes the ledge rather than moving the button away from the finger. */
-.listen-button:active {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--zone) 72%, #000);
-}
-
-.listen-button:disabled {
-  opacity: 0.65;
-  cursor: default;
-}
-
-.icon-button {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  color: var(--dim);
-  background: var(--surface);
-  border: none;
-  border-radius: 999px;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition:
-    color 160ms ease,
-    transform 120ms ease;
-}
-
-.icon-button:hover {
-  color: var(--text);
-}
-
-.icon-button:active {
-  transform: translateY(2px);
-}
-
-.icon-button.is-quiet {
-  width: 38px;
-  height: 38px;
-  background: transparent;
-  box-shadow: none;
-}
-
-.icon-button.is-quiet:hover {
-  background: var(--sunken);
-}
-
 /* Projector mode: the dial takes the room, and the chrome that a teacher only needs
    between activities gets out of its way until the pointer comes back. */
 .app[data-projector] .app-header,
@@ -341,50 +271,6 @@ body {
 
 /* The track is drawn as a background cut at the value, and the handle sits on top of
    it — see components/Slider.tsx for why the browser's own colours are not used. */
-/* The zone a threshold belongs to, named by its colour now that the faces are gone. */
-.swatch {
-  flex: 0 0 auto;
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: 9px;
-  border-radius: 999px;
-}
-
-.outline-button {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  min-height: 46px;
-  padding: 0 18px;
-  color: var(--text);
-  font-family: 'Fredoka', 'Nunito', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  background: var(--sunken);
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 160ms ease;
-}
-
-.outline-button.is-small {
-  min-height: 38px;
-  padding: 0 14px;
-  font-size: 15px;
-}
-
-.outline-button:hover:not(:disabled) {
-  background: var(--sunken-2);
-}
-
-.outline-button:disabled {
-  color: var(--dim);
-  opacity: 0.7;
-  cursor: default;
-}
-
 /* A note the section ends on, set off from the controls above it. */
 .settings-note {
   display: flex;
@@ -397,10 +283,6 @@ body {
   line-height: 1.45;
   background: var(--sunken);
   border-radius: 14px;
-}
-
-.settings-note .swatch {
-  align-self: center;
 }
 
 .shortcuts {
