@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { CENTER, arcPath, pointAt } from '@/lib/geometry'
 import { zones, type Thresholds, type Zone } from '@/lib/presets'
+import { Dial, Fill, Reading, Zone as ZoneLabel } from './Gauge.styled'
 
 const RADIUS = 150
 const TRACK_WIDTH = 34
@@ -38,8 +39,7 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
   ].filter((band) => band.to > band.from)
 
   return (
-    <svg
-      className="gauge"
+    <Dial
       viewBox="14 14 372 316"
       role="img"
       aria-label={`${zone.name}. Noise level ${Math.round(level)} out of 100.`}
@@ -62,8 +62,7 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
       {/* A rounded cap on a zero-length dash would still draw a dot at the start of
           the dial, so a paused meter leaves the fill out rather than shortening it. */}
       {listening && (
-        <path
-          className="gauge-fill"
+        <Fill
           d={arcPath(0, 1, RADIUS)}
           pathLength={100}
           stroke={zone.color}
@@ -97,7 +96,6 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
           settling down can see the mark it is coming back down from. */}
       {listening && peak > 1 && (
         <line
-          className="gauge-peak"
           x1={pointAt(peak / 100, RADIUS + TRACK_WIDTH / 2 + 8).x}
           y1={pointAt(peak / 100, RADIUS + TRACK_WIDTH / 2 + 8).y}
           x2={pointAt(peak / 100, RADIUS + TRACK_WIDTH / 2 + 20).x}
@@ -108,19 +106,13 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
         />
       )}
 
-      <text className="gauge-reading" x={CENTER.x} y={CENTER.y + 20} textAnchor="middle">
+      <Reading x={CENTER.x} y={CENTER.y + 20} textAnchor="middle">
         {Math.round(level)}
-      </text>
-      <text
-        className="gauge-zone"
-        x={CENTER.x}
-        y={CENTER.y + 70}
-        textAnchor="middle"
-        fill={zone.color}
-      >
+      </Reading>
+      <ZoneLabel x={CENTER.x} y={CENTER.y + 70} textAnchor="middle" fill={zone.color}>
         {listening ? zone.name : 'Paused'}
-      </text>
-    </svg>
+      </ZoneLabel>
+    </Dial>
   )
 }
 

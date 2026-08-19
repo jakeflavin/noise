@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Maximize2, Mic, MicOff, Minimize2, Settings as SettingsIcon } from 'lucide-react'
 import { Gauge } from './components/Gauge'
+import { Card as GaugeCard } from './components/Gauge.styled'
 import { PresetPicker } from './components/PresetPicker'
 import { SettingsDialog } from './components/SettingsDialog'
 import { builtInPresets, resolvePreset, zoneFor, zones } from './lib/presets'
@@ -96,7 +97,7 @@ export default function App() {
       </header>
 
       <main className="app-main">
-        <div className="gauge-card">
+        <GaugeCard>
           <Gauge
             level={level}
             thresholds={preset.thresholds}
@@ -104,7 +105,7 @@ export default function App() {
             listening={listening}
             alerting={alerting}
           />
-        </div>
+        </GaugeCard>
         <p className="app-message" role="status">
           {error ??
             (alerting

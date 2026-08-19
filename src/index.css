@@ -136,62 +136,6 @@ body {
 
 /* The dial sits on a card, which is what makes the app read as a classroom tool rather
    than a dashboard: one white sheet with the reading on it. */
-.gauge-card {
-  display: flex;
-  flex: 0 1 auto;
-  align-items: center;
-  justify-content: center;
-  /* The card takes its width from whichever runs out first, the screen's width or its
-     height, and the dial's own proportions give it its height from there. Sizing it by
-     height alone left the card letterboxed around the dial on a phone. */
-  width: 100%;
-  max-width: min(100%, 72vh);
-  padding: 18px 26px;
-  background: var(--surface);
-  border-radius: 32px;
-  box-shadow: var(--shadow);
-}
-
-.gauge {
-  width: 100%;
-  height: auto;
-}
-
-.gauge-fill {
-  /* The fill is redrawn every frame from the reading itself, so it must not also be
-     animated by CSS — the two would fight and the dial would lag the room. Only the
-     colour is given a transition, because a zone change is a step, not a sweep. */
-  transition: stroke 300ms ease;
-}
-
-.gauge-reading {
-  font-family: 'Fredoka', 'Nunito', sans-serif;
-  font-size: 116px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.04em;
-  fill: var(--text);
-}
-
-.gauge-zone {
-  font-family: 'Fredoka', 'Nunito', sans-serif;
-  font-size: 32px;
-  font-weight: 500;
-}
-
-/* The alert beats the dial rather than fading it: a fill that dims halfway through
-   every cycle reads as a rendering fault, not as a warning. */
-.gauge[data-alerting] {
-  animation: alert-beat 900ms ease-in-out infinite;
-  transform-origin: center;
-}
-
-@keyframes alert-beat {
-  50% {
-    transform: scale(1.03);
-  }
-}
-
 .app-message {
   margin: 0;
   max-width: 46ch;
@@ -317,10 +261,6 @@ body {
   .app[data-projector] .app-message {
     opacity: 1;
   }
-}
-
-.app[data-projector] .gauge-card {
-  max-width: min(100%, 96vh);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -496,12 +436,6 @@ kbd {
 }
 
 /* Below the breakpoint the activity tabs tighten up, which keeps the dial on screen. */
-@media (max-height: 760px), (max-width: 620px) {
-  .gauge-card {
-    padding: 12px 16px;
-  }
-}
-
 /*
  * The theme control. Smaller than the activity tabs it borrows its shape from, because
  * this one is set once and the activity tabs are pressed every lesson.

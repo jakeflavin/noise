@@ -18,13 +18,13 @@ describe('Gauge', () => {
   })
 
   it('flags the alert on the element, so the stylesheet owns what that looks like', () => {
-    const { container } = render(<Gauge {...props} level={90} alerting />)
-    expect(container.querySelector('.gauge')).toHaveAttribute('data-alerting')
+    render(<Gauge {...props} level={90} alerting />)
+    expect(screen.getByRole('img')).toHaveAttribute('data-alerting')
   })
 
   it('leaves the attribute off entirely when nothing is wrong', () => {
-    const { container } = render(<Gauge {...props} level={10} />)
-    expect(container.querySelector('.gauge')).not.toHaveAttribute('data-alerting')
+    render(<Gauge {...props} level={10} />)
+    expect(screen.getByRole('img')).not.toHaveAttribute('data-alerting')
   })
 
   it('draws one band per zone the activity actually uses', () => {
