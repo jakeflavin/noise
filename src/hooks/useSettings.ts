@@ -1,4 +1,4 @@
-import { sanitizeThresholds, defaultPresetId, type Thresholds } from '../lib/presets'
+import { sanitizeThresholds, defaultPresetId, type Thresholds } from '@/lib/presets'
 import { usePersistentState } from './usePersistentState'
 import type { Theme } from './useAppliedTheme'
 

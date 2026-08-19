@@ -1,6 +1,6 @@
 import { useRef } from 'react'
-import { CENTER, arcPath, pointAt } from '../lib/geometry'
-import { zones, type Thresholds, type Zone } from '../lib/presets'
+import { CENTER, arcPath, pointAt } from '@/lib/geometry'
+import { zones, type Thresholds, type Zone } from '@/lib/presets'
 
 const RADIUS = 150
 const TRACK_WIDTH = 34

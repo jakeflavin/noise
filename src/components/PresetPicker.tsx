@@ -1,4 +1,4 @@
-import { builtInPresets } from '../lib/presets'
+import { builtInPresets } from '@/lib/presets'
 
 type PresetPickerProps = {
   presetId: string

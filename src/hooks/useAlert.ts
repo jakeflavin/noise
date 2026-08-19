@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { idleAlert, stepAlert } from '../lib/alert'
-import { playChime } from '../lib/chime'
+import { idleAlert, stepAlert } from '@/lib/alert'
+import { playChime } from '@/lib/chime'
 
 type Options = {
   /** Whether the room is over its limit right now. */
