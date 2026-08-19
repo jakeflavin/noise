@@ -43,10 +43,13 @@ export default function App() {
       if (e.metaKey || e.ctrlKey || e.altKey) return
       if (isTypingTarget(e.target) || isDrawerOpen()) return
 
+      // Indexed reads are checked now, so the preset is resolved once and the guard is the
+      // value itself rather than a bounds test the compiler cannot connect to the lookup.
       const digit = Number(e.key)
-      if (digit >= 1 && digit <= builtInPresets.length) {
+      const preset = digit >= 1 && digit <= builtInPresets.length ? builtInPresets[digit - 1] : undefined
+      if (preset) {
         e.preventDefault()
-        setSettings((current) => ({ ...current, presetId: builtInPresets[digit - 1].id }))
+        setSettings((current) => ({ ...current, presetId: preset.id }))
         return
       }
 
