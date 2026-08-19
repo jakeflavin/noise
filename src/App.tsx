@@ -3,12 +3,12 @@ import { Maximize2, Mic, MicOff, Minimize2, Settings as SettingsIcon } from 'luc
 import { Gauge } from './components/Gauge'
 import { PresetPicker } from './components/PresetPicker'
 import { SettingsDialog } from './components/SettingsDialog'
-import { builtInPresets, resolvePreset, zoneFor, zones } from './presets'
-import { isDrawerOpen, isTypingTarget } from './shortcuts'
-import { useAlert } from './useAlert'
-import { useMeter } from './useMeter'
-import { useProjector, useWakeLock } from './useProjector'
-import { useSettings } from './useSettings'
+import { builtInPresets, resolvePreset, zoneFor, zones } from './lib/presets'
+import { isDrawerOpen, isTypingTarget } from './lib/shortcuts'
+import { useAlert } from './hooks/useAlert'
+import { useMeter } from './hooks/useMeter'
+import { useProjector, useWakeLock } from './hooks/useProjector'
+import { useSettings } from './hooks/useSettings'
 
 export default function App() {
   const [settings, setSettings] = useSettings()

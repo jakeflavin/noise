@@ -1,4 +1,4 @@
-import { builtInPresets } from '../presets'
+import { builtInPresets } from '../lib/presets'
 
 type Props = {
   presetId: string

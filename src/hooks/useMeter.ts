@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { dbOf, levelFromDb, rmsOf, smoothLevel } from './levels'
+import { dbOf, levelFromDb, rmsOf, smoothLevel } from '../lib/levels'
 
 export type MeterStatus = 'idle' | 'starting' | 'listening' | 'error'
 

@@ -1,4 +1,4 @@
-import { sanitizeThresholds, zones, type Thresholds } from '../presets'
+import { sanitizeThresholds, zones, type Thresholds } from '../lib/presets'
 import { Setting } from './Setting'
 import { Slider } from './Slider'
 
