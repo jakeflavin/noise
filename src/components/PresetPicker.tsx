@@ -1,4 +1,5 @@
 import { builtInPresets } from '@/lib/presets'
+import { Tab, Tabs } from './PresetPicker.styled'
 
 type PresetPickerProps = {
   presetId: string
@@ -12,11 +13,10 @@ type PresetPickerProps = {
  */
 export function PresetPicker({ presetId, onChange }: PresetPickerProps) {
   return (
-    <div className="presets" role="radiogroup" aria-label="Activity">
+    <Tabs role="radiogroup" aria-label="Activity">
       {builtInPresets.map((preset) => (
-        <button
+        <Tab
           key={preset.id}
-          className="preset"
           role="radio"
           aria-checked={preset.id === presetId}
           onClick={() => onChange(preset.id)}
@@ -24,8 +24,8 @@ export function PresetPicker({ presetId, onChange }: PresetPickerProps) {
           style={{ '--chip': preset.color } as React.CSSProperties}
         >
           {preset.name}
-        </button>
+        </Tab>
       ))}
-    </div>
+    </Tabs>
   )
 }
