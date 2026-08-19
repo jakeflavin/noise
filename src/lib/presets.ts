@@ -105,8 +105,11 @@ export function sanitizeThresholds(thresholds: Partial<Thresholds> | undefined):
 
 /** The chosen preset, with the user's own thresholds standing in for the custom one. */
 export function resolvePreset(id: string, custom: Thresholds): Preset {
-  const preset = builtInPresets.find((p) => p.id === id) ?? builtInPresets.find((p) => p.id === defaultPresetId)!
-  return preset.id === customPresetId ? { ...preset, thresholds: sanitizeThresholds(custom) } : preset
+  const preset =
+    builtInPresets.find((p) => p.id === id) ?? builtInPresets.find((p) => p.id === defaultPresetId)!
+  return preset.id === customPresetId
+    ? { ...preset, thresholds: sanitizeThresholds(custom) }
+    : preset
 }
 
 export function zoneFor(level: number, thresholds: Thresholds): Zone {

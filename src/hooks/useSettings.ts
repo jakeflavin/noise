@@ -57,7 +57,6 @@ function read(raw: string | null): Settings {
   }
 }
 
-
 export function useSettings() {
   return usePersistentState(STORAGE_KEY, defaultSettings, { read })
 }

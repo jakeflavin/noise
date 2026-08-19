@@ -34,10 +34,7 @@ export default function App() {
   // The zone's colour is published to CSS so the button, the card and the alert all
   // answer to the room without each of them being handed the colour as a prop.
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--zone',
-      listening ? zone.color : zones.calm.color,
-    )
+    document.documentElement.style.setProperty('--zone', listening ? zone.color : zones.calm.color)
   }, [zone, listening])
 
   useEffect(() => {
@@ -48,7 +45,8 @@ export default function App() {
       // Indexed reads are checked now, so the preset is resolved once and the guard is the
       // value itself rather than a bounds test the compiler cannot connect to the lookup.
       const digit = Number(e.key)
-      const preset = digit >= 1 && digit <= builtInPresets.length ? builtInPresets[digit - 1] : undefined
+      const preset =
+        digit >= 1 && digit <= builtInPresets.length ? builtInPresets[digit - 1] : undefined
       if (preset) {
         e.preventDefault()
         setSettings((current) => ({ ...current, presetId: preset.id }))
@@ -72,7 +70,11 @@ export default function App() {
   }, [toggle, projector, setSettings])
 
   return (
-    <div className="app" data-projector={projector.on || undefined} data-alerting={alerting || undefined}>
+    <div
+      className="app"
+      data-projector={projector.on || undefined}
+      data-alerting={alerting || undefined}
+    >
       <header className="app-header">
         <h1 className="app-title">Hush</h1>
         <div className="app-tools">

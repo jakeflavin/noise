@@ -111,7 +111,13 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
       <text className="gauge-reading" x={CENTER.x} y={CENTER.y + 20} textAnchor="middle">
         {Math.round(level)}
       </text>
-      <text className="gauge-zone" x={CENTER.x} y={CENTER.y + 70} textAnchor="middle" fill={zone.color}>
+      <text
+        className="gauge-zone"
+        x={CENTER.x}
+        y={CENTER.y + 70}
+        textAnchor="middle"
+        fill={zone.color}
+      >
         {listening ? zone.name : 'Paused'}
       </text>
     </svg>

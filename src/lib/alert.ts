@@ -27,7 +27,10 @@ export type AlertStep = {
 }
 
 /** The next state, and whether this is the moment to sound the alert. */
-export function stepAlert(state: AlertState, step: AlertStep): { state: AlertState; fire: boolean } {
+export function stepAlert(
+  state: AlertState,
+  step: AlertStep,
+): { state: AlertState; fire: boolean } {
   const { over, now, graceMs, cooldownMs } = step
 
   // Dropping back under the limit clears the run, but not the cooldown: the point of

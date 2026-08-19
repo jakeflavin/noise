@@ -29,7 +29,14 @@ const themes = [
   { value: 'system', label: 'System' },
 ] as const
 
-export function SettingsDialog({ open, onClose, settings, onChange, listening, rawDbRef }: SettingsDialogProps) {
+export function SettingsDialog({
+  open,
+  onClose,
+  settings,
+  onChange,
+  listening,
+  rawDbRef,
+}: SettingsDialogProps) {
   const { ref, onBackdropClick } = useDialog(open, onClose)
   const preset = resolvePreset(settings.presetId, settings.custom)
   const set = <K extends keyof Settings>(key: K, value: Settings[K]) =>
@@ -142,7 +149,10 @@ export function SettingsDialog({ open, onClose, settings, onChange, listening, r
 
       <section className="settings-section">
         <h3>Appearance</h3>
-        <Setting label="Theme" hint="System follows the device, and keeps following it if it changes.">
+        <Setting
+          label="Theme"
+          hint="System follows the device, and keeps following it if it changes."
+        >
           <div className="segmented" role="radiogroup" aria-label="Theme">
             {themes.map(({ value, label }) => (
               <button
@@ -176,8 +186,8 @@ export function SettingsDialog({ open, onClose, settings, onChange, listening, r
       </section>
 
       <p className="settings-note">
-        Nothing is recorded or sent anywhere. The audio is measured in this browser and
-        thrown away frame by frame.
+        Nothing is recorded or sent anywhere. The audio is measured in this browser and thrown away
+        frame by frame.
       </p>
     </dialog>
   )
