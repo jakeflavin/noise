@@ -1,4 +1,4 @@
-type Props = {
+type ToggleProps = {
   checked: boolean
   label: string
   onChange: (checked: boolean) => void
@@ -8,7 +8,7 @@ type Props = {
  * A switch, built on a real checkbox so it keeps the keyboard and screen-reader
  * behaviour a checkbox already has; only its appearance is the app's.
  */
-export function Toggle({ checked, label, onChange }: Props) {
+export function Toggle({ checked, label, onChange }: ToggleProps) {
   return (
     <label className="toggle">
       <input

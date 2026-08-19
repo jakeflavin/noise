@@ -1,4 +1,4 @@
-type Props = {
+type SliderProps = {
   value: number
   min: number
   max: number
@@ -27,7 +27,7 @@ export function Slider({
   accent,
   ariaLabel,
   onChange,
-}: Props) {
+}: SliderProps) {
   const filled = ((value - min) / (max - min)) * 100
 
   return (

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-type Props = {
+type SettingProps = {
   label: ReactNode
   /** What the setting does, in a sentence, under its name. */
   hint?: ReactNode
@@ -19,7 +19,7 @@ type Props = {
  * is where it is read — a number tucked under the right-hand end of a track is a long
  * way from the word that says what it means.
  */
-export function Setting({ label, hint, value, accent, children }: Props) {
+export function Setting({ label, hint, value, accent, children }: SettingProps) {
   return (
     <div className="setting">
       <div className="setting-head">

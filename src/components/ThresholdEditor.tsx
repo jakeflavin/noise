@@ -2,7 +2,7 @@ import { sanitizeThresholds, zones, type Thresholds } from '../lib/presets'
 import { Setting } from './Setting'
 import { Slider } from './Slider'
 
-type Props = {
+type ThresholdEditorProps = {
   thresholds: Thresholds
   /** Built-in presets show their limits but do not let them be dragged. */
   editable: boolean
@@ -20,7 +20,7 @@ const ROWS = [
  * anywhere; ordering is restored on the way out rather than by pinning the handles,
  * which made the middle one feel stuck between its neighbours.
  */
-export function ThresholdEditor({ thresholds, editable, onChange }: Props) {
+export function ThresholdEditor({ thresholds, editable, onChange }: ThresholdEditorProps) {
   return (
     <>
       {ROWS.map((row) => (

@@ -1,6 +1,6 @@
 import { builtInPresets } from '../lib/presets'
 
-type Props = {
+type PresetPickerProps = {
   presetId: string
   onChange: (id: string) => void
 }
@@ -10,7 +10,7 @@ type Props = {
  * mid-lesson, so it sits on the front screen rather than behind the settings drawer —
  * "we are moving to group work" should be one tap, not four.
  */
-export function PresetPicker({ presetId, onChange }: Props) {
+export function PresetPicker({ presetId, onChange }: PresetPickerProps) {
   return (
     <div className="presets" role="radiogroup" aria-label="Activity">
       {builtInPresets.map((preset) => (

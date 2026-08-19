@@ -10,7 +10,7 @@ import { Slider } from './Slider'
 import { ThresholdEditor } from './ThresholdEditor'
 import { Toggle } from './Toggle'
 
-type Props = {
+type SettingsDialogProps = {
   open: boolean
   onClose: () => void
   settings: Settings
@@ -29,7 +29,7 @@ const themes = [
   { value: 'system', label: 'System' },
 ] as const
 
-export function SettingsDialog({ open, onClose, settings, onChange, listening, rawDbRef }: Props) {
+export function SettingsDialog({ open, onClose, settings, onChange, listening, rawDbRef }: SettingsDialogProps) {
   const { ref, onBackdropClick } = useDialog(open, onClose)
   const preset = resolvePreset(settings.presetId, settings.custom)
   const set = <K extends keyof Settings>(key: K, value: Settings[K]) =>
