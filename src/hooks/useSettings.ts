@@ -42,23 +42,15 @@ function clamp(value: number | undefined, or: number, min: number, max: number) 
   return Number.isFinite(value) ? Math.max(min, Math.min(max, value as number)) : or
 }
 
-function load(): Settings {
+function read(raw: string | null): Settings {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
     return raw ? migrate(JSON.parse(raw)) : defaultSettings
   } catch {
     return defaultSettings
   }
 }
 
-function save(settings: Settings) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
-  } catch {
-    // A full or blocked store should not stop the meter running.
-  }
-}
 
 export function useSettings() {
-  return usePersistentState(load, save)
+  return usePersistentState(STORAGE_KEY, defaultSettings, { read })
 }
