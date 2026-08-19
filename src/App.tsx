@@ -9,9 +9,11 @@ import { useAlert } from './hooks/useAlert'
 import { useMeter } from './hooks/useMeter'
 import { useProjector, useWakeLock } from './hooks/useProjector'
 import { useSettings } from './hooks/useSettings'
+import { useAppliedTheme } from './hooks/useAppliedTheme'
 
 export default function App() {
   const [settings, setSettings] = useSettings()
+  useAppliedTheme(settings.theme)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const projector = useProjector()
 

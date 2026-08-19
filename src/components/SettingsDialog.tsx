@@ -23,6 +23,12 @@ type Props = {
 /** What a calibrated room should read while it is quiet. */
 const CALIBRATION_TARGET = 8
 
+const themes = [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'system', label: 'System' },
+] as const
+
 export function SettingsDialog({ open, onClose, settings, onChange, listening, rawDbRef }: Props) {
   const { ref, onBackdropClick } = useDialog(open, onClose)
   const preset = resolvePreset(settings.presetId, settings.custom)
@@ -130,6 +136,25 @@ export function SettingsDialog({ open, onClose, settings, onChange, listening, r
               label="Play a chime with the alert"
               onChange={(checked) => set('sound', checked)}
             />
+          </div>
+        </Setting>
+      </section>
+
+      <section className="settings-section">
+        <h3>Appearance</h3>
+        <Setting label="Theme" hint="System follows the device, and keeps following it if it changes.">
+          <div className="segmented" role="radiogroup" aria-label="Theme">
+            {themes.map(({ value, label }) => (
+              <button
+                key={value}
+                className="segment"
+                role="radio"
+                aria-checked={settings.theme === value}
+                onClick={() => set('theme', value)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </Setting>
       </section>

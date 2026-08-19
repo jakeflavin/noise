@@ -87,7 +87,7 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
             y1={inner.y}
             x2={outer.x}
             y2={outer.y}
-            stroke="var(--card)"
+            stroke="var(--surface)"
             strokeWidth="5"
           />
         )

@@ -1,5 +1,6 @@
 import { sanitizeThresholds, defaultPresetId, type Thresholds } from '../lib/presets'
 import { usePersistentState } from './usePersistentState'
+import type { Theme } from './useAppliedTheme'
 
 export type Settings = {
   presetId: string
@@ -13,9 +14,13 @@ export type Settings = {
   graceSeconds: number
   /** How long the alert stays quiet afterwards, however loud the room stays. */
   cooldownSeconds: number
+  /** Light, dark, or whatever the device is set to. */
+  theme: Theme
 }
 
 const STORAGE_KEY = 'hush.settings'
+
+const themes: Theme[] = ['light', 'dark', 'system']
 
 export const defaultSettings: Settings = {
   presetId: defaultPresetId,
@@ -24,6 +29,7 @@ export const defaultSettings: Settings = {
   sound: true,
   graceSeconds: 3,
   cooldownSeconds: 20,
+  theme: 'system',
 }
 
 /** Fills in anything the stored settings are missing, and repairs what is out of range. */
@@ -35,6 +41,7 @@ export function migrate(stored: Partial<Settings>): Settings {
     sensitivity: clamp(stored.sensitivity, defaultSettings.sensitivity, -24, 24),
     graceSeconds: clamp(stored.graceSeconds, defaultSettings.graceSeconds, 0, 30),
     cooldownSeconds: clamp(stored.cooldownSeconds, defaultSettings.cooldownSeconds, 5, 300),
+    theme: themes.includes(stored.theme as Theme) ? (stored.theme as Theme) : defaultSettings.theme,
   }
 }
 
