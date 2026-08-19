@@ -56,6 +56,13 @@ export const Dial = styled.svg`
       transform: scale(1.03);
     }
   }
+
+  /* The colour change still carries the alert; the beat is the part that has to go. */
+  @media (prefers-reduced-motion: reduce) {
+    &[data-alerting] {
+      animation: none;
+    }
+  }
 `
 
 export const Fill = styled.path`

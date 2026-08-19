@@ -7,8 +7,17 @@ import { useDialog } from '@/hooks/useDialog'
 import type { Settings } from '@/hooks/useSettings'
 import { Setting } from './Setting'
 import { Controls } from './Setting.styled'
-import { OutlineButton } from './buttons.styled'
-import { IconButton } from './buttons.styled'
+import { IconButton, OutlineButton } from './buttons.styled'
+import {
+  Drawer,
+  Head,
+  Keys,
+  Note,
+  Section,
+  Segment,
+  Segmented,
+  ShortcutList,
+} from './SettingsDialog.styled'
 import { Slider } from './Slider'
 import { ThresholdEditor } from './ThresholdEditor'
 import { Toggle } from './Toggle'
@@ -46,16 +55,16 @@ export function SettingsDialog({
     onChange({ ...settings, [key]: value })
 
   return (
-    <dialog className="drawer" ref={ref} onClose={onClose} onClick={onBackdropClick}>
+    <Drawer ref={ref} onClose={onClose} onClick={onBackdropClick}>
       {/* The head stays put while the drawer scrolls, so the way out is always to hand. */}
-      <header className="drawer-head">
+      <Head>
         <h2>Settings</h2>
         <IconButton $quiet onClick={onClose} aria-label="Close settings">
           <X size={20} />
         </IconButton>
-      </header>
+      </Head>
 
-      <section className="settings-section">
+      <Section>
         <h3>{preset.name} limits</h3>
         <ThresholdEditor
           thresholds={preset.thresholds}
@@ -72,9 +81,9 @@ export function SettingsDialog({
             Copy into Custom to edit
           </OutlineButton>
         )}
-      </section>
+      </Section>
 
-      <section className="settings-section">
+      <Section>
         <h3>Microphone</h3>
         <Setting
           label="Sensitivity"
@@ -95,16 +104,16 @@ export function SettingsDialog({
         >
           {listening ? 'Calibrate to the room right now' : 'Start listening to calibrate'}
         </OutlineButton>
-        <p className="settings-note">
+        <Note>
           {listening
             ? `The room is reading ${Math.round(levelFromDb(rawDbRef.current, settings.sensitivity))}.
                Calibrate while it is quiet, and quiet becomes about ${CALIBRATION_TARGET}.`
             : `Calibrating while the room is quiet makes quiet read about ${CALIBRATION_TARGET}
                here, whatever the microphone and the room are like.`}
-        </p>
-      </section>
+        </Note>
+      </Section>
 
-      <section className="settings-section">
+      <Section>
         <h3>Alert</h3>
         <Setting
           label="Patience"
@@ -146,51 +155,50 @@ export function SettingsDialog({
             />
           </Controls>
         </Setting>
-      </section>
+      </Section>
 
-      <section className="settings-section">
+      <Section>
         <h3>Appearance</h3>
         <Setting
           label="Theme"
           hint="System follows the device, and keeps following it if it changes."
         >
-          <div className="segmented" role="radiogroup" aria-label="Theme">
+          <Segmented role="radiogroup" aria-label="Theme">
             {themes.map(({ value, label }) => (
-              <button
+              <Segment
                 key={value}
-                className="segment"
                 role="radio"
                 aria-checked={settings.theme === value}
                 onClick={() => set('theme', value)}
               >
                 {label}
-              </button>
+              </Segment>
             ))}
-          </div>
+          </Segmented>
         </Setting>
-      </section>
+      </Section>
 
-      <section className="settings-section">
+      <Section>
         <h3>Shortcuts</h3>
-        <ul className="shortcuts">
+        <ShortcutList>
           {shortcuts.map((shortcut) => (
             <li key={shortcut.label}>
               <span>{shortcut.label}</span>
-              <span className="keys">
+              <Keys>
                 {shortcut.keys.map((key) => (
                   <kbd key={key}>{key}</kbd>
                 ))}
-              </span>
+              </Keys>
             </li>
           ))}
-        </ul>
-      </section>
+        </ShortcutList>
+      </Section>
 
-      <p className="settings-note">
+      <Note>
         Nothing is recorded or sent anywhere. The audio is measured in this browser and thrown away
         frame by frame.
-      </p>
-    </dialog>
+      </Note>
+    </Drawer>
   )
 }
 

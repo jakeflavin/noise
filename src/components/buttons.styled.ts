@@ -105,9 +105,4 @@ export const Swatch = styled.span`
   height: 10px;
   margin-right: 9px;
   border-radius: 999px;
-
-  /* In a note it sits beside a line of prose rather than on a row of its own. */
-  .settings-note & {
-    align-self: center;
-  }
 `
