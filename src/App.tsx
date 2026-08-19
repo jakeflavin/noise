@@ -3,6 +3,7 @@ import { Maximize2, Mic, MicOff, Minimize2, Settings as SettingsIcon } from 'luc
 import { Gauge } from './components/Gauge'
 import { Card as GaugeCard } from './components/Gauge.styled'
 import { IconButton, ListenButton } from './components/buttons.styled'
+import { Footer, Header, Main, Message, Shell, Title, Tools } from './App.styled'
 import { PresetPicker } from './components/PresetPicker'
 import { SettingsDialog } from './components/SettingsDialog'
 import { builtInPresets, resolvePreset, zoneFor, zones } from './lib/presets'
@@ -72,14 +73,13 @@ export default function App() {
   }, [toggle, projector, setSettings])
 
   return (
-    <div
-      className="app"
+    <Shell
       data-projector={projector.on || undefined}
       data-alerting={alerting || undefined}
     >
-      <header className="app-header">
-        <h1 className="app-title">Hush</h1>
-        <div className="app-tools">
+      <Header>
+        <Title>Hush</Title>
+        <Tools>
           <IconButton
             onClick={projector.toggle}
             aria-label={projector.on ? 'Leave projector mode' : 'Projector mode'}
@@ -92,10 +92,10 @@ export default function App() {
           >
             <SettingsIcon size={18} />
           </IconButton>
-        </div>
-      </header>
+        </Tools>
+      </Header>
 
-      <main className="app-main">
+      <Main>
         <GaugeCard>
           <Gauge
             level={level}
@@ -105,17 +105,17 @@ export default function App() {
             alerting={alerting}
           />
         </GaugeCard>
-        <p className="app-message" role="status">
+        <Message role="status">
           {error ??
             (alerting
               ? `That is over the ${preset.name.toLowerCase()} limit — quiet voices, please.`
               : listening
                 ? preset.hint
                 : 'Nothing is recorded. The microphone is measured in this browser and thrown away.')}
-        </p>
-      </main>
+        </Message>
+      </Main>
 
-      <footer className="app-footer">
+      <Footer>
         <PresetPicker
           presetId={settings.presetId}
           onChange={(presetId) => setSettings((current) => ({ ...current, presetId }))}
@@ -124,7 +124,7 @@ export default function App() {
           {listening ? <MicOff size={20} /> : <Mic size={20} />}
           {listening ? 'Stop' : status === 'starting' ? 'Starting…' : 'Start listening'}
         </ListenButton>
-      </footer>
+      </Footer>
 
       <SettingsDialog
         open={settingsOpen}
@@ -134,6 +134,6 @@ export default function App() {
         listening={listening}
         rawDbRef={rawDbRef}
       />
-    </div>
+    </Shell>
   )
 }
