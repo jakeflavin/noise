@@ -41,8 +41,10 @@ export const Wrapper = styled.label`
     cursor: pointer;
   }
 
+  /* The neutral control colour, not the room's: whether the chime plays is not a
+     property of how loud the class currently is. */
   input:checked + ${Track} {
-    background: var(--zone);
+    background: var(--control);
   }
 
   input:checked + ${Track}::after {

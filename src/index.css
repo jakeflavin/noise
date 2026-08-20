@@ -14,7 +14,10 @@
   --bg: #fbf7f0;
   --surface: #ffffff;
   --text: #2e3245;
-  --dim: #7c8199;
+  /* Dark enough to clear 4.5:1 on all four of the light theme's grounds — the paper, the
+     card, and both sunken fills. The prose it sets is short and it is the only thing the
+     idle screen says. */
+  --dim: #65697d;
   --line: #ebe4d9;
   --shadow: 0 2px 0 #e6ded1, 0 10px 24px -14px #6c604b7a;
   /* Recessed fills: slider tracks, note boxes, secondary buttons. */
@@ -23,8 +26,18 @@
   --drop: #6c604b59;
   --drop-lg: #4a412f66;
   --scrim: #2e324533;
-  /* The current zone's colour, set by the app on every reading. */
+  /* Settings that have nothing to do with how loud the room is take this rather than
+     the zone, so a sensitivity slider does not turn red when the class does. */
+  --control: #4b5169;
+
+  /*
+   * The room's colour, set by the app on every reading, in its two forms: --zone is
+   * the dial's flat band, and --zone-ink is the same hue taken far enough from the
+   * paper to set type in — or to sit under --on-zone as a fill. See lib/presets.ts.
+   */
   --zone: #2fbf71;
+  --zone-ink: #1e7b49;
+  --on-zone: #ffffff;
 }
 
 /*
@@ -46,6 +59,11 @@
   --drop: #00000066;
   --drop-lg: #000000a6;
   --scrim: #000000a6;
+  --control: #c3c9dd;
+  /* The dark ground lets the bright zone colours carry type themselves, so the ink is
+     the band colour and what sits on it is the paper rather than the page. */
+  --zone-ink: #2fbf71;
+  --on-zone: #14161d;
 }
 
 *,

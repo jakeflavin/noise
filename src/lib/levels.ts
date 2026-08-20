@@ -44,11 +44,15 @@ export function dbForLevel(level: number): number {
 }
 
 /**
- * The trim that would put the room's current hum at `target`, so calibration is a
+ * The trim that would move the reading now on the dial to `target`, so calibration is a
  * matter of standing in the quiet and saying "this is what quiet looks like here".
+ *
+ * It works from the level being shown rather than from the raw decibels behind it. The
+ * two are a smoothing stage apart, and calibrating against the unsmoothed one meant the
+ * drawer could say the room was reading 31 while the dial beside it said 57.
  */
-export function sensitivityFor(rawDb: number, target: number): number {
-  return Math.round(dbForLevel(target) - rawDb)
+export function trimForLevel(shown: number, trim: number, target: number): number {
+  return Math.round(dbForLevel(target) - dbForLevel(shown) + trim)
 }
 
 /**

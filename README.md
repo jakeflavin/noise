@@ -11,11 +11,14 @@ recorded, stored or sent anywhere.
 - **A live dial.** One thick arc, banded green through red at this activity's limits
   and filled to the room's current level, with a peak mark that slides back down.
 - **Activities.** Silent, Independent, Partners, Groups and a Custom set — each with
-  its own idea of where calm ends and too loud begins. One tap, or keys `1`–`5`.
+  its own idea of where calm ends and too loud begins. One tap, keys `1`–`5`, or the
+  arrow keys once the row has focus.
 - **An alert.** When the room stays over its limit for longer than the set patience,
   the dial beats, the page washes over in the zone's colour and an optional chime
   sounds — then it holds its tongue for the cooldown rather than nagging.
-- **Projector mode.** Fullscreen, chrome out of the way, screen held awake (`P`).
+- **Projector mode.** Fullscreen, the dial edge to edge, the screen held awake (`P`). The
+  chrome goes once the room has been left alone for a moment, and a nudge brings it back —
+  on a touch screen as well as under a pointer.
 - **Calibration.** A sensitivity trim, and a one-tap calibrate that takes the room's
   current hush as its baseline.
 

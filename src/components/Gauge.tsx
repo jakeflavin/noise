@@ -15,6 +15,8 @@ export type GaugeProps = {
   zone: Zone
   listening: boolean
   alerting: boolean
+  /** The colour the zone's name is set in, which depends on the theme's ground. */
+  zoneInk: string
 }
 
 /**
@@ -25,7 +27,7 @@ export type GaugeProps = {
  * so the dash *is* the number, and one attribute changes per frame rather than the
  * whole dial being redrawn.
  */
-export function Gauge({ level, thresholds, zone, listening, alerting }: GaugeProps) {
+export function Gauge({ level, thresholds, zone, listening, alerting, zoneInk }: GaugeProps) {
   const peak = usePeak(level, listening)
 
   // Bands butt against each other and are separated by the notches drawn over them,
@@ -42,7 +44,11 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
     <Dial
       viewBox="14 14 372 316"
       role="img"
-      aria-label={`${zone.name}. Noise level ${Math.round(level)} out of 100.`}
+      aria-label={
+        listening
+          ? `${zone.name}. Noise level ${Math.round(level)} out of 100.`
+          : 'Paused. The microphone is off and nothing is being measured.'
+      }
       data-alerting={alerting || undefined}
     >
       {/* The bands: where this activity draws its lines, in the zones' own colours,
@@ -109,7 +115,15 @@ export function Gauge({ level, thresholds, zone, listening, alerting }: GaugePro
       <Reading x={CENTER.x} y={CENTER.y + 20} textAnchor="middle">
         {Math.round(level)}
       </Reading>
-      <ZoneLabel x={CENTER.x} y={CENTER.y + 70} textAnchor="middle" fill={zone.color}>
+      {/* A stopped meter takes the paper's own grey rather than the calm green: zero on a
+          green dial is exactly the picture a genuinely silent room makes, and the colour
+          is the part that carries to the back of the room. */}
+      <ZoneLabel
+        x={CENTER.x}
+        y={CENTER.y + 70}
+        textAnchor="middle"
+        fill={listening ? zoneInk : 'var(--dim)'}
+      >
         {listening ? zone.name : 'Paused'}
       </ZoneLabel>
     </Dial>

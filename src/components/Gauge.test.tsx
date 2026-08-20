@@ -4,12 +4,24 @@ import { Gauge } from './Gauge'
 import { zones, type Thresholds } from '@/lib/presets'
 
 const thresholds: Thresholds = { calm: 20, working: 40, loud: 60 }
-const props = { thresholds, zone: zones.calm, listening: false, alerting: false }
+const props = {
+  thresholds,
+  zone: zones.calm,
+  listening: true,
+  alerting: false,
+  zoneInk: zones.calm.ink.light,
+}
 
 describe('Gauge', () => {
   it('names the zone and the reading, since the dial itself is a picture', () => {
     render(<Gauge {...props} level={37} zone={zones.working} />)
     expect(screen.getByRole('img')).toHaveAccessibleName('Working. Noise level 37 out of 100.')
+  })
+
+  it('says the microphone is off rather than calling a stopped meter calm', () => {
+    render(<Gauge {...props} level={0} listening={false} />)
+    expect(screen.getByRole('img').getAttribute('aria-label')).toContain('Paused')
+    expect(screen.getByRole('img').getAttribute('aria-label')).not.toContain('Calm')
   })
 
   it('rounds the announced level rather than reading out a fraction', () => {

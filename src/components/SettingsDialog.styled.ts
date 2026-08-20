@@ -111,6 +111,10 @@ export const ShortcutList = styled.ul`
 export const Keys = styled.span`
   display: flex;
   gap: 4px;
+  align-items: center;
+  color: var(--dim);
+  font-size: 12px;
+  font-weight: 700;
 
   kbd {
     padding: 3px 8px;

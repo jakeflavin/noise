@@ -11,7 +11,7 @@ export const Range = styled.input`
   margin: 0;
   background: linear-gradient(
       to right,
-      var(--accent, var(--zone)) var(--fill),
+      var(--accent, var(--control)) var(--fill),
       var(--sunken) var(--fill)
     )
     center / 100% 10px no-repeat;
@@ -23,7 +23,7 @@ export const Range = styled.input`
   &::-webkit-slider-thumb {
     width: 24px;
     height: 24px;
-    background: var(--accent, var(--zone));
+    background: var(--accent, var(--control));
     border: 4px solid var(--surface);
     border-radius: 999px;
     box-shadow: 0 1px 4px var(--drop);
@@ -34,7 +34,7 @@ export const Range = styled.input`
   &::-moz-range-thumb {
     width: 16px;
     height: 16px;
-    background: var(--accent, var(--zone));
+    background: var(--accent, var(--control));
     border: 4px solid var(--surface);
     border-radius: 999px;
     box-shadow: 0 1px 4px var(--drop);

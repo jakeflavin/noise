@@ -8,7 +8,14 @@ import { styled } from 'styled-components'
  * `$`-prefixed prop out of the DOM, and it puts the choice in the type system.
  */
 
-/** The one thing a teacher presses mid-lesson, sized to be hit without looking. */
+/**
+ * The one thing a teacher presses mid-lesson, sized to be hit without looking.
+ *
+ * It still answers to the room, but in the zone's ink rather than its band colour:
+ * white on the band measured 2.38:1 on green and 1.64:1 on yellow, and this is the
+ * app's largest, most-pressed control. The ink is dark enough on paper that --on-zone
+ * clears 4.5:1 in both themes.
+ */
 export const ListenButton = styled.button`
   display: inline-flex;
   gap: 10px;
@@ -17,15 +24,15 @@ export const ListenButton = styled.button`
   width: 100%;
   min-height: 62px;
   padding: 0 34px;
-  color: #fff;
+  color: var(--on-zone);
   font-family: 'Fredoka', 'Nunito', sans-serif;
   font-size: 21px;
   font-weight: 500;
-  background: var(--zone);
+  background: var(--zone-ink);
   border: none;
   /* The solid ledge under the button is what makes it feel like something to press. */
   border-radius: 999px;
-  box-shadow: 0 5px 0 color-mix(in srgb, var(--zone) 72%, #000);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--zone-ink) 72%, #000);
   cursor: pointer;
   transition:
     background 300ms ease,
@@ -35,7 +42,7 @@ export const ListenButton = styled.button`
   /* Pressing squashes the ledge rather than moving the button away from the finger. */
   &:active {
     transform: translateY(4px);
-    box-shadow: 0 1px 0 color-mix(in srgb, var(--zone) 72%, #000);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--zone-ink) 72%, #000);
   }
 
   &:disabled {

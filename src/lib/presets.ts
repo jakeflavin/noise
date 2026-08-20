@@ -21,22 +21,57 @@ export type Preset = {
   hint: string
   /** The colour of its chip, so the row of activities is told apart by colour. */
   color: string
+  /** The chip's colour where it has to carry a label — see {@link Ink}. */
+  ink: Ink
   thresholds: Thresholds
 }
+
+/**
+ * Every colour in the app has two jobs, and one value cannot do both.
+ *
+ * `color` is the dial: flat and saturated, because a band has to carry across a room.
+ * Those same values are far too light to set type in or on — white on the yellow is
+ * 1.64:1 — so anything that touches a letter uses `ink` instead: the same hue taken
+ * dark enough on paper, and left bright on the dark ground, that it clears 4.5:1 both
+ * as text and as a fill with `--on-zone` over it.
+ */
+export type Ink = { light: string; dark: string }
 
 export type Zone = {
   id: 'calm' | 'working' | 'loud' | 'over'
   name: string
   /** Flat and saturated: the dial has to carry across a room, not look subtle. */
   color: string
+  /** The same hue, safe to set type in or under. */
+  ink: Ink
 }
 
 /** Green through to red, which is the order a class already reads without being told. */
 export const zones: Record<Zone['id'], Zone> = {
-  calm: { id: 'calm', name: 'Calm', color: '#2FBF71' },
-  working: { id: 'working', name: 'Working', color: '#FFC02E' },
-  loud: { id: 'loud', name: 'Getting loud', color: '#FF8A2B' },
-  over: { id: 'over', name: 'Too loud', color: '#EF4136' },
+  calm: {
+    id: 'calm',
+    name: 'Calm',
+    color: '#2FBF71',
+    ink: { light: '#1E7B49', dark: '#2FBF71' },
+  },
+  working: {
+    id: 'working',
+    name: 'Working',
+    color: '#FFC02E',
+    ink: { light: '#8A6819', dark: '#FFC02E' },
+  },
+  loud: {
+    id: 'loud',
+    name: 'Getting loud',
+    color: '#FF8A2B',
+    ink: { light: '#A4591C', dark: '#FF8A2B' },
+  },
+  over: {
+    id: 'over',
+    name: 'Too loud',
+    color: '#EF4136',
+    ink: { light: '#C2352C', dark: '#F15B51' },
+  },
 }
 
 export const builtInPresets: Preset[] = [
@@ -45,6 +80,7 @@ export const builtInPresets: Preset[] = [
     name: 'Silent',
     hint: 'Tests and independent reading',
     color: '#5B8DEF',
+    ink: { light: '#4469B2', dark: '#5B8DEF' },
     thresholds: { calm: 8, working: 16, loud: 26 },
   },
   {
@@ -52,6 +88,7 @@ export const builtInPresets: Preset[] = [
     name: 'Independent',
     hint: 'Heads-down work, quiet questions',
     color: '#2FBF71',
+    ink: { light: '#1E7B49', dark: '#2FBF71' },
     thresholds: { calm: 16, working: 28, loud: 42 },
   },
   {
@@ -59,6 +96,7 @@ export const builtInPresets: Preset[] = [
     name: 'Partners',
     hint: 'Talking in twos and threes',
     color: '#FFC02E',
+    ink: { light: '#8A6819', dark: '#FFC02E' },
     thresholds: { calm: 26, working: 44, loud: 60 },
   },
   {
@@ -66,6 +104,7 @@ export const builtInPresets: Preset[] = [
     name: 'Groups',
     hint: 'Tables working out loud',
     color: '#FF8A2B',
+    ink: { light: '#A4591C', dark: '#FF8A2B' },
     thresholds: { calm: 36, working: 58, loud: 74 },
   },
   {
@@ -73,6 +112,7 @@ export const builtInPresets: Preset[] = [
     name: 'Custom',
     hint: 'Your own limits',
     color: '#A167E6',
+    ink: { light: '#8253BA', dark: '#A974E8' },
     thresholds: { calm: 20, working: 40, loud: 60 },
   },
 ]

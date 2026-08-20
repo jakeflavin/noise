@@ -1,9 +1,11 @@
+import { Fragment, useRef } from 'react'
 import { Play, SlidersHorizontal, X } from 'lucide-react'
 import { customPresetId, resolvePreset } from '@/lib/presets'
-import { levelFromDb, sensitivityFor } from '@/lib/levels'
+import { trimForLevel } from '@/lib/levels'
 import { playChime } from '@/lib/chime'
 import { shortcuts } from '@/lib/shortcuts'
 import { useDialog } from '@/hooks/useDialog'
+import type { ResolvedTheme } from '@/hooks/useAppliedTheme'
 import type { Settings } from '@/hooks/useSettings'
 import { Setting } from './Setting'
 import { Controls } from './Setting.styled'
@@ -28,8 +30,9 @@ type SettingsDialogProps = {
   settings: Settings
   onChange: (next: Settings) => void
   listening: boolean
-  /** The room's raw reading, read at the moment calibration is asked for. */
-  rawDbRef: React.RefObject<number>
+  /** The reading the dial is showing, so calibration works from the number on screen. */
+  level: number
+  theme: ResolvedTheme
 }
 
 /** What a calibrated room should read while it is quiet. */
@@ -47,12 +50,17 @@ export function SettingsDialog({
   settings,
   onChange,
   listening,
-  rawDbRef,
+  level,
+  theme,
 }: SettingsDialogProps) {
   const { ref, onBackdropClick } = useDialog(open, onClose)
   const preset = resolvePreset(settings.presetId, settings.custom)
   const set = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     onChange({ ...settings, [key]: value })
+
+  const calibrated = () => trimForLevel(level, settings.sensitivity, CALIBRATION_TARGET)
+
+  const themeRef = useRef<HTMLDivElement>(null)
 
   return (
     <Drawer ref={ref} onClose={onClose} onClick={onBackdropClick}>
@@ -69,6 +77,7 @@ export function SettingsDialog({
         <ThresholdEditor
           thresholds={preset.thresholds}
           editable={preset.id === customPresetId}
+          theme={theme}
           onChange={(custom) => onChange({ ...settings, custom })}
         />
         {preset.id !== customPresetId && (
@@ -98,16 +107,13 @@ export function SettingsDialog({
             onChange={(value) => set('sensitivity', value)}
           />
         </Setting>
-        <OutlineButton
-          disabled={!listening}
-          onClick={() => set('sensitivity', sensitivityFor(rawDbRef.current, CALIBRATION_TARGET))}
-        >
+        <OutlineButton disabled={!listening} onClick={() => set('sensitivity', calibrated())}>
           {listening ? 'Calibrate to the room right now' : 'Start listening to calibrate'}
         </OutlineButton>
         <Note>
           {listening
-            ? `The room is reading ${Math.round(levelFromDb(rawDbRef.current, settings.sensitivity))}.
-               Calibrate while it is quiet, and quiet becomes about ${CALIBRATION_TARGET}.`
+            ? `The dial is reading ${Math.round(level)}. Calibrate while the room is quiet, and
+               quiet becomes about ${CALIBRATION_TARGET}.`
             : `Calibrating while the room is quiet makes quiet read about ${CALIBRATION_TARGET}
                here, whatever the microphone and the room are like.`}
         </Note>
@@ -163,12 +169,30 @@ export function SettingsDialog({
           label="Theme"
           hint="System follows the device, and keeps following it if it changes."
         >
-          <Segmented role="radiogroup" aria-label="Theme">
+          <Segmented
+            ref={themeRef}
+            role="radiogroup"
+            aria-label="Theme"
+            onKeyDown={(e) => {
+              const delta = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]
+              if (!delta) return
+              e.preventDefault()
+              const at = themes.findIndex((t) => t.value === settings.theme)
+              const next = themes[(at + delta + themes.length) % themes.length]
+              if (!next) return
+              set('theme', next.value)
+              themeRef.current
+                ?.querySelector<HTMLButtonElement>(`[data-theme-option='${next.value}']`)
+                ?.focus()
+            }}
+          >
             {themes.map(({ value, label }) => (
               <Segment
                 key={value}
+                data-theme-option={value}
                 role="radio"
                 aria-checked={settings.theme === value}
+                tabIndex={settings.theme === value ? 0 : -1}
                 onClick={() => set('theme', value)}
               >
                 {label}
@@ -185,8 +209,11 @@ export function SettingsDialog({
             <li key={shortcut.label}>
               <span>{shortcut.label}</span>
               <Keys>
-                {shortcut.keys.map((key) => (
-                  <kbd key={key}>{key}</kbd>
+                {shortcut.keys.map((key, i) => (
+                  <Fragment key={key}>
+                    {i > 0 && shortcut.through && <span aria-hidden="true">–</span>}
+                    <kbd>{key}</kbd>
+                  </Fragment>
                 ))}
               </Keys>
             </li>

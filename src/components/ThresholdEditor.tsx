@@ -1,4 +1,5 @@
 import { sanitizeThresholds, zones, type Thresholds } from '@/lib/presets'
+import type { ResolvedTheme } from '@/hooks/useAppliedTheme'
 import { Swatch } from './buttons.styled'
 import { Note } from './SettingsDialog.styled'
 import { Setting } from './Setting'
@@ -8,6 +9,8 @@ type ThresholdEditorProps = {
   thresholds: Thresholds
   /** Built-in presets show their limits but do not let them be dragged. */
   editable: boolean
+  /** Which of each zone's two colours the type in this row should take. */
+  theme: ResolvedTheme
   onChange: (next: Thresholds) => void
 }
 
@@ -22,13 +25,13 @@ const ROWS = [
  * anywhere; ordering is restored on the way out rather than by pinning the handles,
  * which made the middle one feel stuck between its neighbours.
  */
-export function ThresholdEditor({ thresholds, editable, onChange }: ThresholdEditorProps) {
+export function ThresholdEditor({ thresholds, editable, theme, onChange }: ThresholdEditorProps) {
   return (
     <>
       {ROWS.map((row) => (
         <Setting
           key={row.key}
-          accent={row.zone.color}
+          accent={row.zone.ink[theme]}
           value={thresholds[row.key]}
           label={
             <>
@@ -48,7 +51,7 @@ export function ThresholdEditor({ thresholds, editable, onChange }: ThresholdEdi
           />
         </Setting>
       ))}
-      <Note style={{ '--accent': zones.over.color } as React.CSSProperties}>
+      <Note>
         <Swatch style={{ background: zones.over.color }} aria-hidden="true" />
         Anything above {thresholds.loud} is over the limit, and starts the alert’s clock.
       </Note>

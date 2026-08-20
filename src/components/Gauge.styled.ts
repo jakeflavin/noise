@@ -29,9 +29,21 @@ export const Card = styled.div`
    * grow past the height cap it takes on a desk. Written as an ancestor condition because
    * the attribute is on the app shell, which is not this component's to know about
    * otherwise.
+   *
+   * Raising only the height term did nothing on a portrait screen, where the width term
+   * was already the binding one — the mode measured as an exact no-op on a tablet. The
+   * padding goes with it, so the width the dial gains is real on both orientations.
    */
   [data-projector] & {
-    max-width: min(100%, 96vh);
+    max-width: min(100%, 100vh);
+    padding: 6px 8px;
+  }
+
+  /* On its side the dial sits beside the controls rather than above them, so the height
+     it is capped by is nearly the whole screen. */
+  @media (orientation: landscape) and (max-height: 560px) {
+    max-width: min(100%, 98vh);
+    padding: 8px 12px;
   }
 `
 
@@ -81,6 +93,11 @@ export const Reading = styled.text`
   fill: var(--text);
 `
 
+/**
+ * The zone's name under the reading. Set in the zone's *ink* rather than its band
+ * colour: the band is chosen to carry across a room at 34px thick, and the same yellow
+ * as 32px type on the white card measured 1.64:1.
+ */
 export const Zone = styled.text`
   font-family: 'Fredoka', 'Nunito', sans-serif;
   font-size: 32px;

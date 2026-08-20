@@ -1,8 +1,14 @@
-export type Shortcut = { keys: string[]; label: string }
+/**
+ * `keys` are real keys and get drawn as keycaps. `through` says the pair is a range
+ * rather than two separate keys — the dash between them is punctuation, and setting it
+ * as a third keycap said there was a key marked "–".
+ */
+export type Shortcut = { keys: string[]; label: string; through?: boolean }
 
 export const shortcuts: Shortcut[] = [
   { keys: ['Space'], label: 'Start or stop listening' },
-  { keys: ['1', '–', '5'], label: 'Switch activity' },
+  { keys: ['1', '5'], label: 'Switch activity', through: true },
+  { keys: ['←', '→'], label: 'Move through the activities' },
   { keys: ['P'], label: 'Projector mode' },
   { keys: ['S'], label: 'Open settings' },
   { keys: ['?'], label: 'Show these shortcuts' },

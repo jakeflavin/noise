@@ -5,7 +5,7 @@ import {
   dbOf,
   levelFromDb,
   rmsOf,
-  sensitivityFor,
+  trimForLevel,
   smoothLevel,
 } from './levels'
 
@@ -46,12 +46,20 @@ describe('levelFromDb', () => {
   })
 })
 
-describe('sensitivityFor', () => {
-  it('finds the trim that puts the current room at the target', () => {
+describe('trimForLevel', () => {
+  it('finds the trim that moves what the dial is showing onto the target', () => {
     const raw = -50
-    const trim = sensitivityFor(raw, 10)
+    const shown = levelFromDb(raw, 0)
+    const trim = trimForLevel(shown, 0, 10)
     // The trim is a whole number of decibels, so it lands near the target, not on it.
     expect(Math.abs(levelFromDb(raw, trim) - 10)).toBeLessThan(1)
+  })
+
+  it('accounts for the trim already applied, so calibrating twice does not drift', () => {
+    const raw = -44
+    const first = trimForLevel(levelFromDb(raw, 0), 0, 8)
+    const second = trimForLevel(levelFromDb(raw, first), first, 8)
+    expect(Math.abs(second - first)).toBeLessThanOrEqual(1)
   })
 })
 

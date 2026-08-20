@@ -25,17 +25,20 @@ export const Label = styled.span`
  * keeps its width as the number changes.
  *
  * --accent is set inline by the caller, so a row can take the colour of the zone it edits.
+ * Where no row supplies one it falls back to the neutral control colour rather than to the
+ * room's: a sensitivity of "0 dB" has nothing to do with how loud the class is, and a red
+ * pill beside a number is the universal shape of a validation error.
  */
 export const Value = styled.span`
   flex: 0 0 auto;
   min-width: 4ch;
   padding: 3px 11px;
-  color: var(--accent, var(--zone));
+  color: var(--accent, var(--control));
   font-size: 14px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   text-align: center;
-  background: color-mix(in srgb, var(--accent, var(--zone)) 14%, transparent);
+  background: color-mix(in srgb, var(--accent, var(--control)) 14%, transparent);
   border-radius: 999px;
 `
 

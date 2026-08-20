@@ -3,16 +3,44 @@ import { dbOf, levelFromDb, rmsOf, smoothLevel } from '@/lib/levels'
 
 export type MeterStatus = 'idle' | 'starting' | 'listening' | 'error'
 
+/**
+ * What to say when the microphone will not start.
+ *
+ * Every one of these is a thing that actually happens in a classroom — a laptop with
+ * no microphone, a headset another tab is already holding, a prompt dismissed rather
+ * than answered — and each has a different next step. Falling through to the browser's
+ * own `message` gave the user two words ("Not supported") and nothing to do about it.
+ */
+const FAILURES = {
+  NotAllowedError:
+    'Microphone access was blocked. Allow it in the address bar, then start listening again.',
+  NotFoundError:
+    'No microphone was found. Plug one in or pick one in your system sound settings, then try again.',
+  NotReadableError:
+    'The microphone is busy — another app or tab is using it. Close that one, then try again.',
+  OverconstrainedError:
+    'This microphone cannot be used the way Hush needs. Pick a different one in your system sound settings.',
+  SecurityError: 'This page needs to be served over https before it can use the microphone.',
+  AbortError: 'The microphone stopped before it started. Try again.',
+  NotSupportedError: 'This browser will not give a web page microphone access.',
+} satisfies Record<string, string>
+
+const FALLBACK = 'The microphone could not be started. Try again, or check your sound settings.'
+
+export function failureMessage(e: unknown): string {
+  if (!(e instanceof DOMException)) return FALLBACK
+  return (FAILURES as Record<string, string | undefined>)[e.name] ?? FALLBACK
+}
+
 type AudioWindow = typeof globalThis & { webkitAudioContext?: typeof AudioContext }
 
 /**
  * The live reading, and the microphone behind it.
  *
  * Audio is sampled on an animation frame rather than in state: a frame's worth of
- * samples only matters as the number it produces, and the raw decibels are kept in a
- * ref so calibration can ask what the room sounds like right now without the reading
- * itself causing a render. The trim is read the same way, so moving the sensitivity
- * slider retunes the meter instead of tearing the stream down and asking again.
+ * samples only matters as the number it produces. The trim is read from a ref, so moving
+ * the sensitivity slider retunes the meter instead of tearing the stream down and asking
+ * again.
  */
 export function useMeter(sensitivity: number) {
   const [level, setLevel] = useState(0)
@@ -22,7 +50,6 @@ export function useMeter(sensitivity: number) {
   const contextRef = useRef<AudioContext | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const frameRef = useRef<number | null>(null)
-  const rawDbRef = useRef(-Infinity)
   const sensitivityRef = useRef(sensitivity)
   sensitivityRef.current = sensitivity
 
@@ -33,7 +60,6 @@ export function useMeter(sensitivity: number) {
     streamRef.current = null
     void contextRef.current?.close()
     contextRef.current = null
-    rawDbRef.current = -Infinity
     setLevel(0)
     setStatus('idle')
   }, [])
@@ -47,7 +73,7 @@ export function useMeter(sensitivity: number) {
     setStatus('starting')
 
     if (!navigator.mediaDevices?.getUserMedia) {
-      setError('This browser will not give a web page microphone access.')
+      setError(FAILURES.NotSupportedError)
       setStatus('error')
       return
     }
@@ -77,24 +103,14 @@ export function useMeter(sensitivity: number) {
         last = now
 
         analyser.getByteTimeDomainData(samples)
-        const db = dbOf(rmsOf(samples))
-        rawDbRef.current = db
-
-        const target = levelFromDb(db, sensitivityRef.current)
+        const target = levelFromDb(dbOf(rmsOf(samples)), sensitivityRef.current)
         setLevel((previous) => smoothLevel(previous, target, dt))
         frameRef.current = requestAnimationFrame(tick)
       }
 
       frameRef.current = requestAnimationFrame(tick)
     } catch (e) {
-      const denied = e instanceof DOMException && e.name === 'NotAllowedError'
-      setError(
-        denied
-          ? 'Microphone access was blocked. Allow it in the address bar, then start again.'
-          : e instanceof Error
-            ? e.message
-            : 'The microphone could not be started.',
-      )
+      setError(failureMessage(e))
       stop()
       setStatus('error')
     }
@@ -106,5 +122,5 @@ export function useMeter(sensitivity: number) {
     else void start()
   }, [listening, start, stop])
 
-  return { level, status, listening, error, rawDbRef, start, stop, toggle }
+  return { level, status, listening, error, start, stop, toggle }
 }
